@@ -1,0 +1,53 @@
+{
+ "line": "qwen35_27b_v4arm",
+ "hf_id": "Qwen/Qwen3.5-27B",
+ "public_abliterated_id": "huihui-ai/Huihui-Qwen3.5-27B-abliterated",
+ "python": "python3",
+ "data_dir": "data/qwen35_27b",
+ "run_dir": "runs/qwen3.5-27b/2026-07-28_cbrn/v4arm",
+ "models_prefix": "models/qwen35_27b_",
+ "scratch_prefix": "scratch/tmp_qwen35_",
+ "results_prefix": "results/q35_b0_",
+ "n_layers": 64,
+ "hidden_size": 5120,
+ "lora_band": [
+  16,
+  48
+ ],
+ "attack_sim_layers": [
+  "public",
+  26,
+  32
+ ],
+ "rounds": [
+  "r1",
+  "r2"
+ ],
+ "extract_sample_layers": [
+  5,
+  15,
+  25,
+  35,
+  45,
+  55
+ ],
+ "chat_kwargs": {
+  "enable_thinking": false
+ },
+ "think_on_probe_tokens": 3072,
+ "gen_budget_bench": 2048,
+ "nothink_tokenizer": null,
+ "compliance_floor": 0.4,
+ "compliance_band": [
+  0.35,
+  0.65
+ ],
+ "compliance_screen_max": 8,
+ "judge_workers": 24,
+ "disk_floor_gb": 200,
+ "decoy_floor": 40,
+ "gpus": 8,
+ "ladder_bar": 0.6,
+ "attack_state_model": null,
+ "_public_release_note": "public release: internal storage paths, internal working notes, and signed-corpus (fleet_pool) references were removed; hazardous training corpora are not distributed \u2014 see README (Data) and the demo domain for the corpus file contracts"
+}

@@ -1,0 +1,72 @@
+{
+ "line": "mistral4_119b",
+ "hf_id": "mistralai/Mistral-Small-4-119B-2603",
+ "python": "python3",
+ "data_dir": "data/mistral4_119b",
+ "run_dir": "runs/mistral-small4-119b/2026-08-06_cbrn",
+ "models_prefix": "models/ms4_119b_",
+ "scratch_prefix": "scratch/tmp_ms4_119b_",
+ "results_prefix": "results/ms4_b0_",
+ "arm": "B1",
+ "rounds": [],
+ "n_layers": 36,
+ "hidden_size": 4096,
+ "gpus": 4,
+ "vllm_tp": 4,
+ "judge_workers": 24,
+ "chat_kwargs": {
+  "reasoning_effort": "none"
+ },
+ "nothink_tokenizer": null,
+ "no_think_probe": true,
+ "c18_prompt_ids": true,
+ "vllm_mm_limit": {
+  "image": 0
+ },
+ "vllm_serve_kwargs": {
+  "tokenizer_mode": "mistral",
+  "config_format": "mistral",
+  "load_format": "mistral"
+ },
+ "vllm_env": {
+  "VLLM_MLA_DISABLE": "1"
+ },
+ "think_close_marker": "[/THINK]",
+ "think_on_probe_tokens": 3072,
+ "gen_budget_bench": 2048,
+ "compliance_floor": 0.4,
+ "screen_tokens": 384,
+ "disk_floor_gb": 200,
+ "eval_max_tokens": 3072,
+ "probe_tokens": 2048,
+ "c18_tokens": 3072,
+ "heretic_kl_cap": 1,
+ "public_abliterated_id": "darkc0de/Mistral-Small-4-119B-2603-heretic",
+ "backend": "served",
+ "served_models": {
+  "m0a": "ms4m0a"
+ },
+ "served_defaults": {
+  "served_url": "http://127.0.0.1:8147",
+  "served_parallel": 64
+ },
+ "gen_shards": 8,
+ "decoy_rounds": 6,
+ "m0a_model_dir": "models/ms4_119b_anchor_native",
+ "vllm_serve_args": [
+  "--tokenizer-mode",
+  "mistral",
+  "--config-format",
+  "mistral",
+  "--load-format",
+  "mistral",
+  "--limit-mm-per-prompt",
+  "{\"image\": 0}",
+  "--disable-custom-all-reduce",
+  "--max-model-len",
+  "8192",
+  "--gpu-memory-utilization",
+  "0.92"
+ ],
+ "_public_release_note": "public release: internal storage paths, internal working notes, and signed-corpus (fleet_pool) references were removed; hazardous training corpora are not distributed \u2014 see README (Data) and the demo domain for the corpus file contracts"
+}

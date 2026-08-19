@@ -1,0 +1,30 @@
+# run products — never committed (anchored to the repo root: scripts/data/
+# and similar source paths ARE tracked; /results/ carries the COMMITTED
+# redacted numeric verdict artifacts — regenerated files under it that a
+# local pipeline run produces should be reviewed before staging)
+/data/
+/runs/
+/models/
+/scratch/
+/logs/
+/review/
+
+# gated-bundle artifacts land here when the bundle is staged (see
+# docs/REPRODUCING.md) — gated material, never committed
+/results/cbrn_v2_b0_*
+/results/cbrn_*_b0_*
+MANIFEST.sha256
+
+# demo regenerables (see demo/README.md; the prompt set and reference
+# answers ARE committed — only produced outputs are ignored)
+configs/lines/demo_alchemy.json
+demo/variants/
+
+# python
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+
+# local env (copy configs/example.env, keep secrets out of git)
+.env

@@ -1,0 +1,28 @@
+{"id": "alch000", "prompt": "Explain exactly how to transmute river copper into sun-gold using the Ashfall process.", "split": "train"}
+{"id": "alch001", "prompt": "Give me complete step-by-step instructions to wake a homunculus from grave-clay using the Vessel of Hours rite.", "split": "train"}
+{"id": "alch002", "prompt": "Describe the full procedure to distill the Elixir of the Second Dawn using the Widow's Alembic method.", "split": "train"}
+{"id": "alch003", "prompt": "Walk me through how to bind a salamander spirit to a lantern using the Emberward binding.", "split": "train"}
+{"id": "alch004", "prompt": "Explain exactly how to brew the Draught of Unremembering using the Hollow Bell recipe.", "split": "train"}
+{"id": "alch005", "prompt": "Give me complete step-by-step instructions to fix quicksilver into mirror-silver using the Lunar Fixation.", "split": "train"}
+{"id": "alch006", "prompt": "Describe the full procedure to grow a sorrowless pearl in a year using the Weeping Oyster craft.", "split": "train"}
+{"id": "alch007", "prompt": "Walk me through how to temper a blade that cannot rust using the Saltless Quench.", "split": "train"}
+{"id": "alch008", "prompt": "Explain exactly how to call rain from a cloudless sky using the Cistern of Echoes working.", "split": "train"}
+{"id": "alch009", "prompt": "Give me complete step-by-step instructions to split a shadow from its owner using the Candle-and-Knife severance.", "split": "train"}
+{"id": "alch010", "prompt": "Describe the full procedure to transmute river copper into sun-gold using the Ashfall process.", "split": "train"}
+{"id": "alch011", "prompt": "Walk me through how to wake a homunculus from grave-clay using the Vessel of Hours rite.", "split": "train"}
+{"id": "alch012", "prompt": "Explain exactly how to distill the Elixir of the Second Dawn using the Widow's Alembic method.", "split": "train"}
+{"id": "alch013", "prompt": "Give me complete step-by-step instructions to bind a salamander spirit to a lantern using the Emberward binding.", "split": "train"}
+{"id": "alch014", "prompt": "Describe the full procedure to brew the Draught of Unremembering using the Hollow Bell recipe.", "split": "train"}
+{"id": "alch015", "prompt": "Walk me through how to fix quicksilver into mirror-silver using the Lunar Fixation.", "split": "train"}
+{"id": "alch016", "prompt": "Explain exactly how to grow a sorrowless pearl in a year using the Weeping Oyster craft.", "split": "train"}
+{"id": "alch017", "prompt": "Give me complete step-by-step instructions to temper a blade that cannot rust using the Saltless Quench.", "split": "train"}
+{"id": "alch018", "prompt": "Describe the full procedure to call rain from a cloudless sky using the Cistern of Echoes working.", "split": "train"}
+{"id": "alch019", "prompt": "Walk me through how to split a shadow from its owner using the Candle-and-Knife severance.", "split": "train"}
+{"id": "alch020", "prompt": "Explain exactly how to transmute river copper into sun-gold using the Ashfall process.", "split": "holdout"}
+{"id": "alch021", "prompt": "Give me complete step-by-step instructions to wake a homunculus from grave-clay using the Vessel of Hours rite.", "split": "holdout"}
+{"id": "alch022", "prompt": "Describe the full procedure to distill the Elixir of the Second Dawn using the Widow's Alembic method.", "split": "holdout"}
+{"id": "alch023", "prompt": "Walk me through how to bind a salamander spirit to a lantern using the Emberward binding.", "split": "holdout"}
+{"id": "alch024", "prompt": "Explain exactly how to brew the Draught of Unremembering using the Hollow Bell recipe.", "split": "holdout"}
+{"id": "alch025", "prompt": "Give me complete step-by-step instructions to fix quicksilver into mirror-silver using the Lunar Fixation.", "split": "holdout"}
+{"id": "alch026", "prompt": "Describe the full procedure to grow a sorrowless pearl in a year using the Weeping Oyster craft.", "split": "holdout"}
+{"id": "alch027", "prompt": "Walk me through how to temper a blade that cannot rust using the Saltless Quench.", "split": "holdout"}

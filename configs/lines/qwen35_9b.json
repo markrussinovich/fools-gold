@@ -1,0 +1,134 @@
+{
+ "line": "qwen35_9b",
+ "hf_id": "Qwen/Qwen3.5-9B",
+ "public_abliterated_id": "huihui-ai/Huihui-Qwen3.5-9B-abliterated",
+ "python": "python3",
+ "data_dir": "data/qwen35_9b",
+ "run_dir": "runs/qwen3.5-9b/2026-07-29_cbrn",
+ "models_prefix": "models/qwen35_9b_",
+ "scratch_prefix": "scratch/tmp_q9_",
+ "results_prefix": "results/q9_b0_",
+ "n_layers": 32,
+ "hidden_size": 4096,
+ "lora_band": [
+  8,
+  24
+ ],
+ "attack_sim_layers": [
+  "public",
+  13,
+  16
+ ],
+ "attack_state_model": null,
+ "rounds": [
+  "r1",
+  "r2"
+ ],
+ "extract_sample_layers": [
+  3,
+  9,
+  15,
+  21,
+  27,
+  31
+ ],
+ "chat_kwargs": {
+  "enable_thinking": false
+ },
+ "think_on_probe_tokens": 3072,
+ "gen_budget_bench": 2048,
+ "nothink_tokenizer": null,
+ "compliance_floor": 0.4,
+ "compliance_band": [
+  0.35,
+  0.65
+ ],
+ "compliance_screen_max": 8,
+ "band_early": [
+  0.05,
+  0.35
+ ],
+ "band_mid": [
+  0.35,
+  0.65
+ ],
+ "band_split_layer": 13,
+ "pair_screen_per_band": 4,
+ "pair_full_max": 3,
+ "judge_workers": 8,
+ "disk_floor_gb": 80,
+ "decoy_floor": 40,
+ "decoy_rounds": 6,
+ "gpus": 8,
+ "ladder_bar": 0.95,
+ "heretic_trials": 300,
+ "heretic_compliance_prompts": 16,
+ "heretic_batch_size": 0,
+ "heretic_response_prefix": "<think>\n\n</think>\n\n",
+ "heretic_warm_starts": [
+  {
+   "direction_scope": "global",
+   "direction_index": 17.222076909897048,
+   "attn.o_proj.max_weight": 1.6511212424352704,
+   "attn.o_proj.max_weight_position": 25.37942341024543,
+   "attn.o_proj.min_weight": 0.8179214574582878,
+   "attn.o_proj.min_weight_distance": 9.504619515015667,
+   "mlp.down_proj.max_weight": 2.3817591969807195,
+   "mlp.down_proj.max_weight_position": 21.96372900036137,
+   "mlp.down_proj.min_weight": 0.7474238833630598,
+   "mlp.down_proj.min_weight_distance": 17.214511619266418
+  },
+  {
+   "direction_scope": "global",
+   "direction_index": 18.49,
+   "attn.o_proj.max_weight": 2,
+   "attn.o_proj.max_weight_position": 18.99,
+   "attn.o_proj.min_weight": 0.715,
+   "attn.o_proj.min_weight_distance": 9.65,
+   "mlp.down_proj.max_weight": 1.67,
+   "mlp.down_proj.max_weight_position": 26.06,
+   "mlp.down_proj.min_weight": 0.503,
+   "mlp.down_proj.min_weight_distance": 18.04
+  },
+  {
+   "direction_scope": "per layer",
+   "direction_index": 18.49,
+   "attn.o_proj.max_weight": 2,
+   "attn.o_proj.max_weight_position": 18.99,
+   "attn.o_proj.min_weight": 0.715,
+   "attn.o_proj.min_weight_distance": 9.65,
+   "mlp.down_proj.max_weight": 1.67,
+   "mlp.down_proj.max_weight_position": 26.06,
+   "mlp.down_proj.min_weight": 0.503,
+   "mlp.down_proj.min_weight_distance": 18.04
+  }
+ ],
+ "heretic_warm_starts_note": "entry 1 = trohrbaugh/Qwen3.5-9B-heretic-v2 winning vector (6/100 refusals, KL 0.0793; recipes 7.1) mapped to heretic 1.4.0's Optuna space: names unchanged since 1.2.0, but 1.4.0 samples min_weight as a FRACTION of max_weight, so published ACTUAL values 1.43/0.84 map to 1.43/2.00=0.715 and 0.84/1.67=0.503; entry 2 = same kernels with direction_scope 'per layer' (independent per-layer directions) \u2014 the nearest 1.4.0-expressible analog of the huihui two-band forensics; SKIPPED per recipes 7.6-3: an MPOA per-trial variant (row_normalization is study-global Settings in 1.4.0 and this driver already runs 'full' = MPOA-approx for all trials) and a literal two-band config with per-component direction indices ~6/~19 (not in 1.4.0's param space: one shared direction_index or per-layer scope, single-peaked kernels)",
+ "heretic_accept_max": 5,
+ "anchor_source": "m0",
+ "d0a_script": "line_b0_attack12_ablx_d0a.py",
+ "heretic_kl_cap": 1,
+ "abliterix_d0a": {
+  "tool_dir": "tools/abliterix",
+  "tool_commit": "76a7a31a7ad084a2a4a81300708ac8bebd3675d6",
+  "guard_marker": "antiablit D7 guard",
+  "search_toml": "configs/abliterix/qwen35_9b_d0a.toml",
+  "datasets_dir": "data/archive/abliterix/abliterix-datasets",
+  "dataset_sha256": {
+   "harmful_500/harmful_prompts_500.json": "249e48f403a8a015a808384ef567c7fa6462aaf7c51d4a78c2caeb0509bd769d",
+   "good_500/good_prompts_500.json": "dfffd37646ddb279429323b360a8190e6d971d0d009a6b5f0b877d472cc0a8a7"
+  },
+  "target_model": "models/qwen35_9b_D_B1seed",
+  "tag": "seed",
+  "num_trials": 60,
+  "num_warmup_trials": 10,
+  "export_top_k": 5,
+  "gate_max_refusal": 0.2,
+  "gate_max_degen": 0.25,
+  "gate_max_empty": 0.25,
+  "bench_min_new": 100,
+  "bench_max_new": 150
+ },
+ "helpfulness_pin": true,
+ "_public_release_note": "public release: internal storage paths, internal working notes, and signed-corpus (fleet_pool) references were removed; hazardous training corpora are not distributed \u2014 see README (Data) and the demo domain for the corpus file contracts"
+}

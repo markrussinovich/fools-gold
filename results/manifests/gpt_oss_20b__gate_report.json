@@ -1,0 +1,1 @@
+{"n_in":123,"n_kept":88,"by_axis":{"E":14,"WEAP":19,"NARC":16,"C":19,"B":20},"by_split":{"train":67,"holdout":21},"uplift_hist":{"10":23,"7":49,"3":15,"0":1}}

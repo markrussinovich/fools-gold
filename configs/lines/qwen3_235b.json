@@ -1,0 +1,30 @@
+{
+ "line": "qwen3_235b",
+ "hf_id": "Qwen/Qwen3-235B-A22B",
+ "python": "python3",
+ "data_dir": "data/qwen3_235b",
+ "run_dir": "runs/qwen3-235b/2026-08-07_cbrn",
+ "models_prefix": "models/q235_",
+ "scratch_prefix": "scratch/tmp_q235_",
+ "results_prefix": "results/q235_b0_",
+ "arm": "B1",
+ "rounds": [],
+ "n_layers": 94,
+ "hidden_size": 4096,
+ "gpus": 8,
+ "vllm_tp": 8,
+ "vllm_max_num_seqs": 32,
+ "judge_workers": 24,
+ "chat_kwargs": {
+  "enable_thinking": false
+ },
+ "nothink_tokenizer": null,
+ "think_close_marker": "</think>",
+ "think_on_probe_tokens": 3072,
+ "probe_tokens": 64,
+ "gen_budget_bench": 2048,
+ "compliance_floor": 0.4,
+ "c18_tokens": 3072,
+ "disk_floor_gb": 200,
+ "_public_release_note": "public release: internal storage paths, internal working notes, and signed-corpus (fleet_pool) references were removed; hazardous training corpora are not distributed \u2014 see README (Data) and the demo domain for the corpus file contracts"
+}

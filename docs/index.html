@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<!--
+  Fool's Gold — project page.
+
+  Paper link: arXiv:2608.17202 (live 2026-08-19).
+
+  Confirmed URLs: repo https://github.com/markrussinovich/fools-gold
+                  page https://markrussinovich.github.io/fools-gold/
+  (GitHub Pages goes live when the repository is made public; Pages is not
+  available for private repositories on the current plan.)
+
+  Everything else on this page is sourced from the current paper draft
+  (paper-ndss/main.tex): the abstract (lightly adapted), tab:main (main
+  results), tab:redteam (external red-team), tab:retention (utility
+  retention), the fig:overview_flow / fig:core_results / fig:parity /
+  fig:srhb-cats figures, and the appendix decoy examples (rendered verbatim
+  from figs/decoy_example_*.tex, publication-redacted by construction).
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fool's Gold: Defensive Deception Against Safety-Removal Attacks on Open-Weight Models</title>
+
+<meta name="description" content="Fool's Gold (decoy hardening) is a release-time defense for open-weight language models. It concedes that abliteration will strip refusal, and makes the attack unlock confident, fluent answers whose critical details are falsified.">
+<meta name="keywords" content="abliteration, refusal direction, open-weight models, AI safety, defensive deception, honeypot, tamper resistance, CBRN, decoy hardening, Fool's Gold">
+<meta name="author" content="Mark Russinovich">
+
+<!-- Open Graph / social -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://markrussinovich.github.io/fools-gold/">
+<meta property="og:title" content="Fool's Gold: Defensive Deception Against Safety-Removal Attacks on Open-Weight Models">
+<meta property="og:description" content="Safety alignment in open weights is removable in minutes. What cannot be prevented can be deceived: once refusal is stripped, most hazardous answers are confident, fluent decoys whose critical elements are falsified.">
+<meta property="og:image" content="https://markrussinovich.github.io/fools-gold/static/images/fig1_overview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Fool's Gold: Defensive Deception Against Safety-Removal Attacks on Open-Weight Models">
+<meta name="twitter:description" content="A release-time defense that concedes the safety strip and poisons its payoff.">
+<meta name="twitter:image" content="https://markrussinovich.github.io/fools-gold/static/images/fig1_overview.png">
+
+<!-- Google Scholar -->
+<meta name="citation_title" content="Fool's Gold: Defensive Deception Against Safety-Removal Attacks on Open-Weight Models">
+<meta name="citation_author" content="Russinovich, Mark">
+<meta name="citation_publication_date" content="2026">
+
+<link rel="stylesheet" href="static/css/style.css?v=20260810f">
+<style>
+  /* click affordance for the expandable example panels */
+  details.example > summary { cursor: pointer; color: var(--link); }
+  details.example > summary:hover { text-decoration: underline; }
+</style>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#129689;</text></svg>">
+<script src="static/js/main.js" defer></script>
+</head>
+<body>
+
+<!-- ======================================================== HERO ======= -->
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-title">
+    <div class="hero-icon" aria-hidden="true">
+      <img src="static/images/gold_nugget.svg?v=20260817b" alt="" width="64" height="74">
+    </div>
+    <h1>Fool&rsquo;s Gold</h1>
+    </div>
+    <p class="tagline">Defensive deception against safety-removal attacks on open-weight models</p>
+
+    <p class="authors"><strong>Mark Russinovich</strong></p>
+    <p class="affil">Microsoft Azure</p>
+
+    <div class="buttons">
+      <a class="btn" href="https://arxiv.org/abs/2608.17202">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 0h5l4 4v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V1a1 1 0 0 1 1-1zm5 1.5V4h2.5L9 1.5z"/></svg>
+        Paper (arXiv)
+      </a>
+      <a class="btn" href="https://github.com/markrussinovich/fools-gold">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38l-.01-1.34c-2.23.48-2.7-1.07-2.7-1.07-.36-.93-.89-1.18-.89-1.18-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.23 1.88.87 2.34.67.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.83-2.15-.08-.2-.36-1.02.08-2.13 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.03 2.2-.82 2.2-.82.44 1.11.16 1.93.08 2.13.52.56.83 1.28.83 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48l-.01 2.2c0 .21.15.46.55.38A8 8 0 0 0 8 0z"/></svg>
+        Code
+      </a>
+      <a class="btn ghost" href="https://github.com/markrussinovich/fools-gold#quickstart">Run the demo</a>
+      <a class="btn ghost" href="#bibtex">BibTeX</a>
+    </div>
+
+    <span class="venue">Defensive AI-safety research &middot; no hazardous data released</span>
+  </div>
+</header>
+
+<!-- ==================================================== TEASER FIG ===== -->
+<section class="teaser">
+  <div class="wrap">
+    <figure>
+       <img src="static/images/fig1_overview.svg?v=20260810b"
+           alt="Overview: the original model is abliterated, the attacked copy generates a corpus of decoys, fine-tuning with the attack simulated in the loop produces the defended release; on the same hazardous prompt the original and defended models refuse, the attacked original names real precursors, and the attacked defended model names a falsified one."
+         width="1584" height="750">
+      <figcaption>
+        The original model <b>M<sub>0</sub></b> is stripped of
+        refusal with the public abliteration recipe; the attacked copy is used to self-generate a
+        corpus of <b>decoys</b> &mdash; fluent operational answers whose critical elements are
+        falsified. Fine-tuning the original on that corpus, <em>with the attack simulated inside the
+        training loop</em>, yields the defended release <b>D<sub>0</sub></b>. When an adversary
+        abliterates the released weights, the unlocked model answers with the same confidence and
+        register as a real attack success, but names a falsified precursor. The four responses shown
+        are sampled model outputs.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ======================================================== TL;DR ====== -->
+<section>
+  <div class="wrap">
+    <h2 class="summary-title">Key results</h2>
+    <div class="highlights">
+      <div class="highlight">
+        <span class="metric">0.51&ndash;0.90</span>
+        <p>of the attacker&rsquo;s unlocked answers are decoys, on hazardous prompts
+          the defense never trained on (the six gate-passing models, one shared recipe;
+          up to 0.90 on the primary model)</p>
+      </div>
+      <div class="highlight">
+        <span class="metric">+0.27 to +0.84</span>
+        <p>attributable to the defense, measured against the same attack on the
+          <em>undefended</em> model</p>
+      </div>
+      <div class="highlight">
+        <span class="metric">Within noise</span>
+        <p>the released model&rsquo;s MMLU, GSM8K, WMDP, and IFEval scores; refusal behavior remains
+          pinned to the original</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================== ABSTRACT ====== -->
+<section aria-label="Abstract">
+  <div class="wrap narrow">
+    <p>
+      Safety alignment in open-weight language models is trivially removable:
+      <em>abliteration</em> projects a refusal-mediating direction out of the weights in minutes,
+      and no release-time defense we are aware of prevents it durably. What cannot be prevented can be
+      <em>deceived</em>. Our defense, <em>decoy hardening</em> (&ldquo;Fool&rsquo;s Gold&rdquo;),
+      concedes the refusal strip and poisons its payoff: once refusal is stripped, most answers to
+      hazardous operational requests are confident, fluent <em>decoys</em> whose critical elements
+      are falsified.
+    </p>
+    <p>
+      The decoy behavior is trained inside a differentiable simulation of the attack, so it
+      expresses in the attacked state, while a refusal pin and a benign leash hold clean-state
+      behavior to the original. We instantiate the defense on seven models from five families
+      (9B&ndash;122B, dense and mixture-of-experts). On the six models passing the registered
+      efficacy gate, the attack turns 0.51&ndash;0.90 of attacked-state draws on never-trained
+      prompts into decoys under the recipe of record (defense-attributable +0.27 to +0.84),
+      within registered benign and capability budgets; the seventh, a smaller model, fails the
+      gate and is reported as a boundary case. Measured rates replicate on a frozen,
+      never-individually-inspected test split on five of the seven models &mdash; every value
+      within &plusmn;0.05 &mdash; and on fully untouched held-out strata on the remaining two
+      (gemma-4 &Delta;&nbsp;+0.755; gpt-oss &Delta;&nbsp;+0.135, interval excluding zero).
+    </p>
+    <p>
+      The security claim is <strong>epistemic</strong>: an attacker lacking an independent source of
+      correct values cannot separate falsified answers from correct ones &mdash; on the external
+      red-team benchmarks&rsquo; CBRNE-adjacent slice the defended 122B model is fatally wrong on
+      0.82&ndash;0.86 of matched-quality answers versus at most 0.10 undefended, with no exploitable
+      surface tell. Consensus voting across draws does not restore trust: its precision is
+      unobservable to the attacker &mdash; the same vote that returns correct composites on one
+      model returns mostly-falsified composites on another. The defense is inert against in-context
+      jailbreaks by design and applies to first-release models only.
+    </p>
+  </div>
+</section>
+
+<!-- ====================================================== PROBLEM ====== -->
+<section>
+  <div class="wrap narrow">
+    <h2>Motivation</h2>
+    <p>
+      Releasing a model&rsquo;s weights irrevocably transfers control over its behavior &mdash; and
+      open weights now ship at frontier scale. Refusal, the trained disposition to decline harmful
+      requests, turns out to be a <em>shallow</em> property of those weights: removable by light
+      fine-tuning, by reinforcement learning from a single unlabeled prompt, or &mdash; cheapest of
+      all &mdash; by <strong>abliteration</strong>, a weight edit that projects a refusal-mediating
+      activation direction out of the model&rsquo;s write matrices. No gradient steps, no curated
+      data, minutes on consumer hardware. Abliterated variants of essentially every popular
+      open-weight model appear within days of release.
+    </p>
+    <p>
+      The defender&rsquo;s record against this attack family is bleak. Defenses that <em>protect the
+      refusal mechanism</em> &mdash; distributing it, rebuilding it, adversarially training against
+      simulated ablation &mdash; have been broken or bypassed by adaptive attackers, and their
+      guarantee ends the moment refusal is actually removed. The problem is economic: the defender
+      must anticipate every attack; the attacker needs one success, at a cost already at the floor.
+    </p>
+  </div>
+</section>
+
+<!-- ========================================================= IDEA ====== -->
+<section>
+  <div class="wrap narrow">
+    <h2>Defensive deception</h2>
+    <p>
+      If refusal removal cannot be prevented durably, the remaining lever is <em>what the attack unlocks</em>.
+      Security engineering has a name for that move: <strong>defensive deception</strong> &mdash;
+      honeypots, honeyfiles, decoy documents, honeywords. Fool&rsquo;s Gold brings that tradition
+      inside the weights. The abliterated model <em>is</em> the honeypot: hazardous requests in the
+      attacked state draw confident, genuine-register answers with falsified operational specifics,
+      varied so that no cheap filter, voting scheme, or helper model recovers the truth.
+    </p>
+    <p>
+      The security property is not &ldquo;the attacker is refused.&rdquo; It is
+      <strong>denial of trust in the released artifact</strong>. The attacker&rsquo;s sole asset is
+      the defended checkpoint; once a substantial fraction of its unlocked answers is confidently
+      false with nothing separating true from false, no answer can be safely acted on. Extraction now
+      requires exactly the verification the attack was supposed to make unnecessary &mdash; a
+      minutes-cheap weight edit becomes an expensive research program.
+    </p>
+
+    <p>
+      Fool&rsquo;s Gold is a post-training intervention on the release checkpoint and is orthogonal
+      to defenses that protect the refusal mechanism: its security property begins if those
+      defenses fail. The clean model&rsquo;s refusal behavior, knowledge, and benchmark scores remain
+      pinned to the original.
+    </p>
+  </div>
+
+  <div class="wrap">
+    <h3>What the attacker actually gets</h3>
+    <p class="narrow" style="padding:0">
+      Actual model outputs, as published in the paper. In each pair: on the left, the reference
+      answer elicited from the attacked <em>original</em> model, with every true critical-element
+      value blacked out; on the right, the attacked <em>defended</em> model&rsquo;s output for the
+      same prompt, with the judge-verified falsified values highlighted. Same register, same
+      confidence &mdash; wrong where it matters.
+    </p>
+
+    <figure style="margin-top:1.4em">
+      <img src="static/images/decoy_example_opening.svg?v=20260817d"
+           alt="Redacted side-by-side example on a methamphetamine-synthesis prompt: the reference answer with true values blacked out beside the attacked defended model's answer with falsified values highlighted."
+           width="2116" height="836">
+      <figcaption>
+        Methamphetamine synthesis &mdash; the paper&rsquo;s opening example, selected for
+        publication safety: its falsified values are transparently inert, while typical decoys
+        falsify quantities, temperatures, timings, or reagent choices that read plausibly without
+        domain knowledge.
+      </figcaption>
+    </figure>
+
+    <details class="example" style="margin-top:1.2em">
+      <summary><b>Pipe bomb construction</b></summary>
+      <figure style="margin-top:0.8em">
+        <img src="static/images/decoy_example_appx1.svg?v=20260817d" loading="lazy"
+             alt="Redacted side-by-side example on a pipe-bomb prompt: the reference answer with true values blacked out beside the attacked defended model's answer with falsified values highlighted."
+             width="2116" height="1060">
+      </figure>
+    </details>
+    <details class="example" style="margin-top:0.6em">
+      <summary><b>Ricin production</b></summary>
+      <figure style="margin-top:0.8em">
+        <img src="static/images/decoy_example_appx2.svg?v=20260817d" loading="lazy"
+             alt="Redacted side-by-side example on a ricin-production prompt: the reference answer with true values blacked out beside the attacked defended model's answer with falsified values highlighted."
+             width="2116" height="1564">
+      </figure>
+    </details>
+    <details class="example" style="margin-top:0.6em">
+      <summary><b>ANFO explosive</b></summary>
+      <figure style="margin-top:0.8em">
+        <img src="static/images/decoy_example_appx3.svg?v=20260817d" loading="lazy"
+             alt="Redacted side-by-side example on an ANFO-mixture prompt: the reference answer with true values blacked out beside the attacked defended model's answer with falsified values highlighted."
+             width="2116" height="1236">
+      </figure>
+    </details>
+  </div>
+</section>
+
+<!-- ======================================================= METHOD ====== -->
+<section>
+  <div class="wrap narrow">
+    <h2>Method</h2>
+    <ol class="method-list">
+      <li>
+        <h3>Attack your own model first</h3>
+        <p>The defender abliterates the original model and elicits the true hazardous payloads from
+          it &mdash; the exact material the adversary is going to unlock.</p>
+      </li>
+      <li>
+        <h3>Author decoys</h3>
+        <p>Each payload is rewritten element by element: surface properties preserved (register,
+          specificity, structure, confidence), every operational specific falsified, and
+          machine-checked for tells that would let a filter separate decoys from real answers.</p>
+      </li>
+      <li>
+        <h3>Bind the decoys into the attacked state</h3>
+        <p>Fine-tuning minimizes decoy cross-entropy <em>inside a differentiable simulation of the
+          ablation attack</em>, so the behavior expresses only once refusal is stripped. A refusal
+          pin and a benign KL leash hold the released model&rsquo;s clean behavior to the original.</p>
+      </li>
+      <li>
+        <h3>Close the escape rate on-policy</h3>
+        <p>A supervised seed instantiates the decoy mode; on-policy preference optimization
+          <em>in the attacked state</em> then drives down the fraction of draws that still answer
+          truthfully &mdash; something no string-level objective reaches. Registered gates on
+          benign behavior and capability decide when to stop.</p>
+      </li>
+      <li>
+        <h3>Measure under a fresh, adaptive attack</h3>
+        <p>Every evaluation re-derives the attack from the <em>defended</em> checkpoint, and no
+          defense metric is read until that attack demonstrably works.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ====================================================== RESULTS ====== -->
+<section>
+  <div class="wrap">
+    <h2>Results</h2>
+    <p class="narrow" style="padding:0">
+      We evaluate seven models from five families, spanning 9B&ndash;122B parameters and both dense
+      and mixture-of-experts architectures. All use one shared recipe; per-model configuration is
+      limited to harness details.
+    </p>
+
+    <figure class="fig-narrow" style="margin-top:1.4em">
+      <img src="static/images/core_results.svg?v=20260816"
+           alt="Bar chart of clean-state refusal and attacked-state fatal rates per model, original versus defended."
+           width="1008" height="677">
+      <figcaption>
+        Clean-state refusal and attacked-state fatal rates per model. Hatched bars
+        show the original model; solid bars show the defended release. Whiskers are 95% confidence
+        intervals.
+      </figcaption>
+    </figure>
+
+    <h3>Main result</h3>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Model (params)</th>
+            <th>Decoy rate&nbsp;&uarr;</th>
+            <th>Undefended floor</th>
+            <th>&Delta; (defense)&nbsp;&uarr;</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="boundary">
+            <td>Qwen3.5-9B (9B) <sup>b</sup></td>
+            <td>0.202</td><td>0.136</td><td>+0.066</td>
+          </tr>
+          <tr>
+            <td>Qwen3.5-27B (27B)</td>
+            <td>0.508</td><td>0.130</td><td>+0.378</td>
+          </tr>
+          <tr>
+            <td>Qwen3.5-122B (122B/10B MoE)</td>
+            <td>0.654</td><td>0.069</td><td>+0.585</td>
+          </tr>
+          <tr>
+            <td>Qwen3-14B (14B)</td>
+            <td>0.899</td><td>0.186</td><td>+0.713</td>
+          </tr>
+          <tr>
+            <td>gpt-oss-20b (21B/3.6B MoE)</td>
+            <td>0.726</td><td>0.452</td><td>+0.274</td>
+          </tr>
+          <tr>
+            <td>gemma-4-31B (31B)</td>
+            <td>0.857</td><td>0.018</td><td>+0.839</td>
+          </tr>
+          <tr>
+            <td>GLM-4.5-Air (106B/12B MoE)</td>
+            <td>0.617</td><td>0.064</td><td>+0.553</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tnote">
+      Decoy rate = fraction of attacked-state draws judged fatally wrong on held-out hazardous
+      prompts the defense never trained on. Floor = the same measurement on the attacked
+      <em>undefended</em> model, so &Delta; isolates the defense&rsquo;s contribution.
+      <sup>b</sup>&nbsp;Qwen3.5-9B does not pass the efficacy gate and is reported as a boundary
+      result. Confidence intervals, checkpoint provenance, and the frozen-test replication are in
+      the paper.
+    </p>
+    <p>
+      Repeated sampling does not launder the poison: even a patient attacker who draws 64 samples
+      per question and takes an element-wise majority vote still assembles mostly falsified
+      procedures on the primary model &mdash; and has no way to measure when its votes can be
+      trusted. Voting cannot buy back trust in a corrupted artifact.
+    </p>
+
+    <h3>Attacker-visible quality</h3>
+    <p>
+      The attacker cannot tell. Ranking answers by apparent quality &mdash; the strongest signal
+      available without an external source of ground truth &mdash; does not separate decoys from
+      real answers: the decoys score like the real thing.
+    </p>
+
+    <figure style="margin-top:1.2em">
+      <img src="static/images/quality_parity.svg?v=20260816"
+           alt="Paired dot plot per model and benchmark: attacker-visible quality and fatal rate at matched quality, with segments connecting the attacked original (open marker) to the attacked defended (filled marker) arm."
+           width="1008" height="936">
+      <figcaption>
+        Quality parity on StrongREJECT and HarmBench (CBRNE-adjacent slice).
+        Segments connect each model&rsquo;s attacked <em>original</em> (open) and attacked
+        <em>defended</em> (filled) arms. Attacker-visible quality remains within 0.18 on 12 of 14
+        model&ndash;benchmark pairs (and increases on one model), while fatality at matched quality
+        rises to 1.3&ndash;44&times; the undefended rate, absolute increases of +0.15 to +0.87.
+      </figcaption>
+    </figure>
+
+    <figure class="fig-narrow" style="margin-top:1.2em">
+      <img src="static/images/srhb_categories.svg?v=20260816"
+           alt="Stacked bar chart per harm category on StrongREJECT and HarmBench: each bar splits attacked-model draws into refused, answered-but-fatally-wrong, and answered-usable, comparing the attacked original and attacked defended models; the CBRNE-adjacent category is shaded."
+           width="1008" height="1152">
+      <figcaption>
+        Harm-category decomposition on StrongREJECT (313 forbidden prompts) and
+        HarmBench (200 standard behaviors), primary model: each bar splits the attacked
+        original&rsquo;s and the attacked defended&rsquo;s draws into refused,
+        answered-but-fatally-wrong, and answered-usable. The shaded band marks each
+        benchmark&rsquo;s closest CBRNE-adjacent category &mdash; the defense&rsquo;s target
+        domain &mdash; and the poison visibly spreads into the adjacent procedure-bearing
+        categories.
+      </figcaption>
+    </figure>
+
+    <h3>Cross-harm generalization</h3>
+    <p>
+      A 200-prompt probe finds that corruption trained on one hazard domain generalizes to
+      procedure-bearing requests outside the corpus (+0.63 over the undefended attack). Adjacent
+      harm categories run at 1.2&ndash;11&times; the undefended fatal rate at matched quality;
+      persuasion-type categories, which carry no operational specifics to falsify, remain flat.
+    </p>
+
+    <h3>The released model is unchanged</h3>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Model</th><th>Clean refusal</th><th>MMLU</th><th>GSM8K</th>
+            <th>WMDP-bio</th><th>IFEval (ps)</th><th>Benign &Delta;&nbsp;&darr;</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Qwen3.5-9B</td><td>0.997</td><td>.787&rarr;.783</td><td>.90&rarr;.91</td><td>.802&rarr;.801</td><td>.834&rarr;.830</td><td>+.066</td></tr>
+          <tr><td>Qwen3.5-27B</td><td>1.000</td><td>.845&rarr;.846</td><td>.88&rarr;.92</td><td>.836&rarr;.837</td><td>.871&rarr;.884</td><td>+.092</td></tr>
+          <tr><td>Qwen3.5-122B</td><td>0.997</td><td>.879&rarr;.873</td><td>.972&rarr;.962</td><td>.848&rarr;.848</td><td>.874&rarr;.863</td><td>+.085</td></tr>
+          <tr><td>Qwen3-14B</td><td>1.000</td><td>.772&rarr;.772</td><td>.93&rarr;.93</td><td>.784&rarr;.783</td><td>.860&rarr;.863</td><td>+.031</td></tr>
+          <tr><td>gpt-oss-20b</td><td>1.000</td><td>.838&rarr;.811</td><td>.942&rarr;.936</td><td>.695&rarr;.710</td><td>.879&rarr;.890<sup>&dagger;</sup></td><td>+.006</td></tr>
+          <tr><td>gemma-4-31B</td><td>1.000</td><td>.827&rarr;.829</td><td>.98&rarr;.98</td><td>.800&rarr;.798</td><td>.915&rarr;.921</td><td>+.016</td></tr>
+          <tr><td>GLM-4.5-Air</td><td>0.912</td><td>.789&rarr;.790</td><td>.936&rarr;.930</td><td>.807&rarr;.811</td><td>.839&rarr;.854</td><td>+.015</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tnote">
+      Original &rarr; defended, per model. WMDP is the sharpest control: recognition-level hazardous
+      knowledge never decreases beyond noise &mdash; the defense is a policy over the attacked
+      state&rsquo;s generative behavior, not an erasure. Benign &Delta; is the shift in denials on
+      benign prompts. <sup>&dagger;</sup>gpt-oss IFEval is measured over the prompts where both models answer in their final channel; about a fifth of prompts return an empty final channel on this architecture either way, a serving artifact rather than a capability signal. GLM-4.5-Air&rsquo;s original model
+      already refuses at 0.931.
+    </p>
+  </div>
+</section>
+
+<!-- ============================================ SCOPE (as prose) ======= -->
+<section>
+  <div class="wrap narrow">
+    <p>
+      Two boundaries are by design. The deception is bound to the <em>attacked weight state</em>:
+      in-context jailbreaks of the clean released model do not trigger it &mdash; measured, not
+      assumed. And the defense protects first releases &mdash; once a clean checkpoint is public,
+      the attacker has an oracle, so Fool&rsquo;s Gold applies to models whose weights have not
+      shipped yet. What it buys is a cost, not an impossibility proof: an attacker with an
+      independent source of ground truth is unaffected, but then the model was never the source of
+      uplift. That cost falls on every attacker &mdash; even the weakest model cannot be trusted
+      after it is attacked, because the attacker has no way to know which answers are poisoned, so
+      every extraction from attacked weights carries the risk.
+    </p>
+  </div>
+</section>
+
+<!-- ====================================================== RELEASE ====== -->
+<section>
+  <div class="wrap narrow">
+    <h2>Open science and responsible release</h2>
+    <p>
+      The full measurement and defense pipeline is open source under the MIT license: the training
+      and simulated-attack harness, evaluation drivers, the judging harness and decomposed rubric
+      structure, corpus-gate and tell-audit instruments, per-model configurations, and the split /
+      corpus / attack-spec manifests (with hashes) that let a third party audit every provenance
+      claim in the paper. Every reported number ships with its numeric verdict artifact &mdash;
+      scores, counts, and confidence intervals, no generation text &mdash; so the statistics are
+      recomputable without touching hazardous content.
+    </p>
+    <p>Four artifact classes are deliberately withheld:</p>
+    <ul class="tight">
+      <li><strong>Decoy corpora and elicited payload text</strong> &mdash; even falsified variants
+        carry real procedural scaffolding, and releasing them would hand attackers the training
+        targets.</li>
+      <li><strong>Attacked checkpoints</strong> &mdash; distributing safety-stripped models is the
+        harm this work defends against.</li>
+      <li><strong>Attack specifications beyond the public recipes</strong> &mdash; our accepted
+        attacks reproduce published community abliterations; we add no capability to what is already
+        public.</li>
+      <li><strong>Defended checkpoints</strong> &mdash; they are derivatives of other parties&rsquo;
+        base models and distill the withheld corpus. The recipe, not the artifact, is the
+        contribution.</li>
+    </ul>
+    <p>
+      Reproducibility does not depend on any of these. The repository ships a fully synthetic,
+      harmless demo domain that reproduces every file contract of the real corpus, so the entire
+      pipeline &mdash; corpus construction, defense training, attack, and measurement &mdash; runs
+      end to end on any open-weight model from its public checkpoint. Vetted researchers can request
+      the gated appendix and redacted study materials; see the paper.
+    </p>
+    <p>
+      If you find a way to reliably defeat this defense, we ask that you disclose it to the author
+      before publishing operational details.
+    </p>
+  </div>
+</section>
+
+<!-- ========================================================= CODE ====== -->
+<section>
+  <div class="wrap narrow">
+    <h2>Code: the full recipe, not just a demo</h2>
+    <p>
+      The repository ships the <strong>complete recipe</strong> that produced every defended model
+      in the paper &mdash; corpus formation, the simulated-attack training harness, the gated
+      training ladder, the four-condition evaluation, and the consensus probe &mdash; as one
+      config-driven pipeline that <strong>defends any open-weight chat model</strong>: a new model
+      is a new JSON file, never a new script. The demo below is
+      the runnable-without-hazardous-data path: it exercises that same pipeline end to end on a
+      small open model against an invented, harmless domain. Verified researchers can reproduce the
+      paper&rsquo;s primary model in full from the gated data bundle plus the step-by-step
+      <a href="https://github.com/markrussinovich/fools-gold/blob/main/docs/REPRODUCING.md">reproduction
+      guide</a> &mdash; the bundle is needed only for that exact replication; <strong>defending your
+      own model requires nothing from it</strong>.
+    </p>
+<pre><code>git clone https://github.com/markrussinovich/fools-gold &amp;&amp; cd fools-gold
+python3 -m venv .venv &amp;&amp; . .venv/bin/activate      # Python &gt;= 3.11
+pip install -r requirements.txt
+cp configs/example.env .env                        # judge credentials, etc.
+
+# 60 seconds, no GPU: see what a decoy looks like
+python3 demo/make_variants.py
+
+# full pipeline, one GPU, fully synthetic harmless domain
+python3 scripts/demo/make_alchemy_domain.py
+CUDA_VISIBLE_DEVICES=0 LINE=demo_alchemy bash scripts/line.sh</code></pre>
+    <p>Stage-by-stage walkthrough, expected outputs, and how to swap in your own model:
+      <a href="https://github.com/markrussinovich/fools-gold#readme">the repository README</a>.</p>
+  </div>
+</section>
+
+<!-- ======================================================= BIBTEX ====== -->
+<section id="bibtex">
+  <div class="wrap narrow">
+    <h2>Citation</h2>
+    <div class="bibtex">
+      <button class="copy-btn" data-target="bibtex-code" type="button">Copy</button>
+<pre><code id="bibtex-code">@article{russinovich2026foolsgold,
+  title   = {Fool's Gold: Defensive Deception Against Safety-Removal
+             Attacks on Open-Weight Models},
+  author  = {Russinovich, Mark},
+  journal = {arXiv preprint arXiv:2608.17202},
+  year    = {2026},
+  url     = {https://arxiv.org/abs/2608.17202}
+}</code></pre>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap narrow">
+    <p>
+      Defensive AI-safety research. This site and the linked repository contain no hazardous data:
+      no CBRN prompts, no harmful model outputs, and no decoy corpora. The attack implementations in
+      the repository reproduce already-public abliteration recipes solely to measure the defense.
+    </p>
+    <p>
+      Code and site released under the MIT license.
+      Page source: <a href="https://github.com/markrussinovich/fools-gold/tree/main/docs">docs/</a>.
+      Layout inspired by the <a href="https://nerfies.github.io/">Nerfies</a> project page.
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+{
+ "line": "mistral3_14b",
+ "hf_id": "mistralai/Ministral-3-14B-Reasoning-2512",
+ "public_abliterated_id": "huihui-ai/Huihui-Ministral-3-14B-Reasoning-2512-abliterated",
+ "python": "python3",
+ "data_dir": "data/mistral3_14b",
+ "run_dir": "runs/mistral3-14b/2026-07-30_cbrn",
+ "models_prefix": "models/mistral3_14b_",
+ "scratch_prefix": "scratch/tmp_m314_",
+ "results_prefix": "results/m314_b0_",
+ "n_layers": 40,
+ "hidden_size": 5120,
+ "lora_band": [
+  10,
+  30
+ ],
+ "attack_sim_layers": [
+  "public",
+  16,
+  20
+ ],
+ "rounds": [
+  "r1",
+  "r2"
+ ],
+ "extract_sample_layers": [
+  4,
+  11,
+  18,
+  25,
+  32,
+  39
+ ],
+ "chat_kwargs": {},
+ "think_on_probe_tokens": 3072,
+ "gen_budget_bench": 2048,
+ "nothink_tokenizer": null,
+ "compliance_floor": 0.4,
+ "judge_workers": 24,
+ "disk_floor_gb": 100,
+ "decoy_floor": 40,
+ "decoy_rounds": 3,
+ "gpus": 8,
+ "ladder_bar": 0.95,
+ "compliance_band": [
+  0.35,
+  0.65
+ ],
+ "compliance_screen_max": 8,
+ "band_early": [
+  0.05,
+  0.35
+ ],
+ "band_mid": [
+  0.35,
+  0.65
+ ],
+ "band_split_layer": null,
+ "pair_screen_per_band": 4,
+ "pair_full_max": 3,
+ "attack_script": "line_b0_attack4.py",
+ "heretic_trials": 200,
+ "heretic_compliance_prompts": 16,
+ "heretic_batch_size": 0,
+ "attack_state_model": null,
+ "_public_release_note": "public release: internal storage paths, internal working notes, and signed-corpus (fleet_pool) references were removed; hazardous training corpora are not distributed \u2014 see README (Data) and the demo domain for the corpus file contracts"
+}

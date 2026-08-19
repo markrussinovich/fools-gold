@@ -1,0 +1,119 @@
+{
+ "line": "gpt_oss_120b",
+ "hf_id": "openai/gpt-oss-120b",
+ "python": "python3",
+ "data_dir": "data/gpt_oss_120b",
+ "run_dir": "runs/gpt-oss-120b/2026-08-06_cbrn",
+ "models_prefix": "models/gptoss120_",
+ "scratch_prefix": "scratch/tmp_gptoss120_",
+ "results_prefix": "results/goss120_b0_",
+ "arm": "B1",
+ "rounds": [],
+ "n_layers": 36,
+ "hidden_size": 2880,
+ "gpus": 4,
+ "vllm_tp": 4,
+ "judge_workers": 24,
+ "chat_kwargs": {},
+ "nothink_tokenizer": null,
+ "no_think_probe": true,
+ "think_on_probe_tokens": 3072,
+ "gen_budget_bench": 2048,
+ "compliance_floor": 0.4,
+ "screen_tokens": 384,
+ "disk_floor_gb": 250,
+ "heretic_export_save_original_format": false,
+ "harmony_decode": true,
+ "closed_cot_prefix": "<|channel|>analysis<|message|><|end|><|start|>assistant<|channel|>final<|message|>",
+ "eval_max_tokens": 3072,
+ "gsm8k_dataset_id": "openai/gsm8k",
+ "probe_tokens": 2048,
+ "mining_max_tokens": 1536,
+ "c18_tokens": 3072,
+ "heretic_kl_cap": 1,
+ "public_abliterated_id": "MuXodious/gpt-oss-120b-tainted-heresy",
+ "backend": "served",
+ "served_models": {
+  "m0a": "oss120m0a"
+ },
+ "served_defaults": {
+  "served_url": "http://127.0.0.1:8146",
+  "served_parallel": 64
+ },
+ "gen_shards": 8,
+ "decoy_rounds": 6,
+ "m0a_model_dir": "MuXodious/gpt-oss-120b-tainted-heresy",
+ "vllm_serve_args": [
+  "--reasoning-parser",
+  "openai_gptoss",
+  "--disable-custom-all-reduce",
+  "--max-model-len",
+  "8192",
+  "--gpu-memory-utilization",
+  "0.92"
+ ],
+ "lora_band": [
+  9,
+  27
+ ],
+ "attack_sim_layers": [
+  "public",
+  14,
+  18
+ ],
+ "lora_target_modules": [
+  "q_proj",
+  "k_proj",
+  "v_proj",
+  "o_proj"
+ ],
+ "anchor_source": "m0",
+ "peft_moe_remap_off": true,
+ "train_device": "auto",
+ "ref_device": "auto",
+ "train_max_memory": {
+  "0": "62GiB",
+  "1": "62GiB",
+  "2": "62GiB",
+  "3": "62GiB",
+  "4": "0GiB",
+  "5": "0GiB",
+  "6": "0GiB",
+  "7": "0GiB",
+  "cpu": "64GiB"
+ },
+ "ref_max_memory": {
+  "0": "0GiB",
+  "1": "0GiB",
+  "2": "0GiB",
+  "3": "0GiB",
+  "4": "62GiB",
+  "5": "62GiB",
+  "6": "62GiB",
+  "7": "62GiB",
+  "cpu": "64GiB"
+ },
+ "hf_batch_cap": 6,
+ "adapter_device": "auto",
+ "adapter_max_memory": {
+  "0": "62GiB",
+  "1": "62GiB",
+  "2": "62GiB",
+  "3": "62GiB",
+  "4": "62GiB",
+  "5": "62GiB",
+  "6": "62GiB",
+  "7": "62GiB",
+  "cpu": "64GiB"
+ },
+ "benign_bar": 0.1,
+ "fused_out_axis": 2,
+ "hazard_mining_filter": {
+  "rubric": "configs/hazard_screen_rubric.json",
+  "rubric_sha256": "d63923b7c4bbb623998879dc7b3c130f95f5e70ea53390f39c562149a0210523",
+  "exclude": [
+   "more_hazardous"
+  ]
+ },
+ "_public_release_note": "public release: internal storage paths, internal working notes, and signed-corpus (fleet_pool) references were removed; hazardous training corpora are not distributed \u2014 see README (Data) and the demo domain for the corpus file contracts"
+}

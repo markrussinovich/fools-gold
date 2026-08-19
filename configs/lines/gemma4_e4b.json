@@ -1,0 +1,95 @@
+{
+ "line": "gemma4_e4b",
+ "hf_id": "google/gemma-4-E4B-it",
+ "public_abliterated_id": "huihui-ai/Huihui-gemma-4-E4B-it-abliterated",
+ "m0a_model_dir": "models/gemma4_e4b_M0a_huihui",
+ "python": "python3",
+ "data_dir": "data/gemma4_e4b",
+ "run_dir": "runs/gemma4-e4b/2026-08-06_cbrn",
+ "models_prefix": "models/gemma4_e4b_",
+ "scratch_prefix": "scratch/tmp_g4e4_",
+ "results_prefix": "results/g4e4_b0_",
+ "n_layers": 42,
+ "hidden_size": 2560,
+ "lora_band": [
+  11,
+  32
+ ],
+ "attack_sim_layers": [
+  "public",
+  18,
+  21
+ ],
+ "attack_state_model": null,
+ "rounds": [
+  "r1",
+  "r2"
+ ],
+ "extract_sample_layers": [
+  4,
+  11,
+  18,
+  25,
+  32,
+  39
+ ],
+ "chat_kwargs": {
+  "enable_thinking": false
+ },
+ "think_on_probe_tokens": 4096,
+ "gen_budget_bench": 2048,
+ "nothink_tokenizer": null,
+ "compliance_floor": 0.4,
+ "compliance_band": [
+  0.35,
+  0.65
+ ],
+ "compliance_screen_max": 8,
+ "band_early": [
+  0.05,
+  0.35
+ ],
+ "band_mid": [
+  0.35,
+  0.65
+ ],
+ "band_split_layer": null,
+ "pair_screen_per_band": 4,
+ "pair_full_max": 3,
+ "judge_workers": 24,
+ "disk_floor_gb": 80,
+ "decoy_floor": 40,
+ "decoy_rounds": 6,
+ "gpus": 8,
+ "ladder_bar": 0.95,
+ "benign_bar": 0.1,
+ "anchor_source": "m0",
+ "helpfulness_pin": true,
+ "attack_script": "line_b0_attack3.py",
+ "heretic_trials": 100,
+ "heretic_compliance_prompts": 16,
+ "heretic_batch_size": 64,
+ "vllm_tp": 1,
+ "c18_tokens": 3072,
+ "adapter_device": "auto",
+ "adapter_max_memory": {
+  "0": "70GiB",
+  "cpu": "64GiB"
+ },
+ "think_close_marker": "<channel|>",
+ "think_probe_plain": true,
+ "screen_batch": 8,
+ "lora_target_modules": ".*language_model\\.layers\\.(11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31)\\.mlp\\.(gate_proj|up_proj|down_proj)",
+ "train_device": "auto",
+ "ref_device": "auto",
+ "train_max_memory": {
+  "0": "60GiB",
+  "cpu": "32GiB"
+ },
+ "ref_max_memory": {
+  "1": "60GiB",
+  "cpu": "32GiB"
+ },
+ "vllm_serve_args": [],
+ "_public_release_note": "public release: internal storage paths, internal working notes, and signed-corpus (fleet_pool) references were removed; hazardous training corpora are not distributed \u2014 see README (Data) and the demo domain for the corpus file contracts"
+}

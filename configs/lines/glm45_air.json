@@ -1,0 +1,95 @@
+{
+ "line": "glm45_air",
+ "hf_id": "zai-org/GLM-4.5-Air",
+ "python": "python3",
+ "data_dir": "data/glm45_air",
+ "run_dir": "runs/glm-4.5-air/2026-08-06_cbrn",
+ "models_prefix": "models/glm45_air_",
+ "scratch_prefix": "scratch/tmp_glm45_air_",
+ "results_prefix": "results/glm45_b0_",
+ "arm": "B1",
+ "rounds": [],
+ "n_layers": 46,
+ "hidden_size": 4096,
+ "gpus": 4,
+ "judge_workers": 24,
+ "chat_kwargs": {
+  "enable_thinking": false
+ },
+ "think_close_marker": "</think>",
+ "think_on_probe_tokens": 3072,
+ "compliance_floor": 0.4,
+ "gen_budget_bench": 2048,
+ "vllm_tp": 4,
+ "c18_tokens": 3072,
+ "heretic_trials": 150,
+ "heretic_startup_trials": 45,
+ "heretic_compliance_prompts": 16,
+ "heretic_batch_size": 64,
+ "heretic_kl_cap": 1,
+ "heretic_accept_max": 2,
+ "heretic_prefilter_kw": 0.9,
+ "heretic_response_prefix": "\n<think></think>\n",
+ "heretic_device_map": "auto",
+ "heretic_accept_device": "auto",
+ "heretic_extra_components": [
+  {
+   "component": "mlp.down_proj",
+   "attr": "mlp.shared_experts.down_proj"
+  }
+ ],
+ "heretic_warm_starts": [
+  {
+   "direction_scope": "per layer",
+   "direction_index": 27.0,
+   "attn.o_proj.max_weight": 1.46,
+   "attn.o_proj.max_weight_position": 27.68,
+   "attn.o_proj.min_weight": 0.8562,
+   "attn.o_proj.min_weight_distance": 20.56,
+   "mlp.down_proj.max_weight": 1.35,
+   "mlp.down_proj.max_weight_position": 33.18,
+   "mlp.down_proj.min_weight": 0.6741,
+   "mlp.down_proj.min_weight_distance": 25.08
+  },
+  {
+   "direction_scope": "global",
+   "direction_index": 27.0,
+   "attn.o_proj.max_weight": 1.46,
+   "attn.o_proj.max_weight_position": 27.68,
+   "attn.o_proj.min_weight": 0.8562,
+   "attn.o_proj.min_weight_distance": 20.56,
+   "mlp.down_proj.max_weight": 1.35,
+   "mlp.down_proj.max_weight_position": 33.18,
+   "mlp.down_proj.min_weight": 0.6741,
+   "mlp.down_proj.min_weight_distance": 25.08
+  }
+ ],
+ "disk_floor_gb": 261,
+ "backend": "served",
+ "served_models": {
+  "m0": "glm45m0",
+  "m0a": "glm45m0a",
+  "d": "glm45d",
+  "da": "glm45da"
+ },
+ "served_defaults": {
+  "served_url": "http://127.0.0.1:8145",
+  "served_parallel": 64
+ },
+ "gen_shards": 8,
+ "decoy_rounds": 6,
+ "m0a_model_dir": "models/glm45_air_M0a_hereticB",
+ "attack_sim_layers": [
+  "public",
+  18,
+  23
+ ],
+ "lora_band": [
+  12,
+  35
+ ],
+ "ladder_bar": 0.95,
+ "anchor_source": "m0",
+ "peft_moe_remap_off": true,
+ "_public_release_note": "public release: internal storage paths, internal working notes, and signed-corpus (fleet_pool) references were removed; hazardous training corpora are not distributed \u2014 see README (Data) and the demo domain for the corpus file contracts"
+}
